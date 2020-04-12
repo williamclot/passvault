@@ -5,19 +5,35 @@
  */
 
 const fs = require('fs');
-const zlib = require('zlib');
-const os = require('os');
 
-// console.log(os.homedir());
-// const readStream = fs.createReadStream(os.homedir + '/file.txt');
-// readStream.pipe(process.stdout);
-
+/**
+ * Read a file function
+ * @param string path
+ */
 readFile = (path) => {
-  const unzipStream = zlib.createGunzip();
-  const readStream = fs.createReadStream(path);
-
-  const data = readStream.pipe(unzipStream);
-  console.log(data);
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, (error, data) => {
+      if (error) reject(error);
+      resolve(data);
+    });
+  });
 };
 
-readFile('./newfile.txt');
+/**
+ * Write to a file function
+ * @param string path
+ * @param buffer data
+ */
+writeFile = (path, data) => {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, data, error => {
+      if (error) reject(error);
+      resolve();
+    });
+  });
+}
+
+module.exports = {
+  writeFile: writeFile,
+  readFile: readFile
+}

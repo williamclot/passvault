@@ -6,19 +6,21 @@
 
 const crypto = require('crypto');
 
+
+/**
+ * Create encryption key from password
+ * @param string password
+ */
 getCipherKey = (password) => {
   return crypto.createHash('sha256').update(password).digest();
 }
 
-getInitVect = () => {
+createInitVect = () => {
   return crypto.randomBytes(16);
 }
 
 getCipher = (cipherKey, initVect) => {
-  const initVect = initVect;
-  const algo = 'aes256';
-  const key = cipherKey;
-  return crypto.createCipheriv(algo, key, initVect);
+  return crypto.createCipheriv('aes256', cipherKey, initVect);
 }
 
 /**
@@ -26,7 +28,7 @@ getCipher = (cipherKey, initVect) => {
  * @param buffer data
  * @param string password
  */
-encrypt = (data, password) => {
+encryptData = (data, password) => {
   const initVect = getInitVect();
   const cipherKey = getCipherKey(password);
   const cipher = getCipher(cipherKey, initVect);
@@ -34,7 +36,7 @@ encrypt = (data, password) => {
   return initVect + ciphertext;
 }
 
-decrypt = (data, password) => {
+decryptData = (data, password) => {
   const cipherKey = getCipherKey(password);
   const decipher = crypto.createDecipheriv('aes256', cipherKey, initVect);
   const plaintext = decipher.update(ciphertext);
